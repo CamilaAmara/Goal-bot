@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GoalBot · Mundial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:      #0a0e1a;
+  --card:    #111827;
+  --border:  #1e2d45;
+  --gold:    #f5c518;
+  --green:   #00e676;
+  --red:     #ff1744;
+  --text:    #e8eaf6;
+  --muted:   #607d8b;
+  --user-bg: #1a237e;
+  --bot-bg:  #0d2137;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:16px;
+  background-image: radial-gradient(ellipse at 20% 0%, #0d2137 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 100%, #1a1000 0%, transparent 60%);
+}
+
+/* HEADER */
+header{
+  width:100%;max-width:660px;
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-bottom:3px solid var(--gold);
+  border-radius:16px 16px 0 0;
+  margin-bottom:0;
+}
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;
+  color:var(--gold);
+  letter-spacing:2px;
+  line-height:1;
+}
+.logo span{color:var(--green);font-size:1.1rem;display:block;letter-spacing:4px;}
+.status-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:blink 2s infinite;
+  margin-left:auto;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* GROUPS STRIP */
+.groups-strip{
+  width:100%;max-width:660px;
+  background:#0d1b2e;
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+  padding:10px 16px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  white-space:nowrap;
+  font-size:.72rem;
+  color:var(--muted);
+  letter-spacing:.5px;
+}
+.groups-strip span{
+  display:inline-block;
+  margin-right:12px;
+  padding:3px 8px;
+  border-radius:4px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:all .15s;
+}
+.groups-strip span:hover{border-color:var(--gold);color:var(--gold);}
+
+/* CHAT */
+#chat{
+  width:100%;max-width:660px;
+  background:var(--card);
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+  height:380px;
+  overflow-y:auto;
+  padding:20px 16px;
+  display:flex;flex-direction:column;gap:12px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+}
+
+.msg{
+  display:flex;gap:10px;
+  animation:pop .2s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.user{flex-direction:row-reverse}
+
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.msg.bot .avatar{background:#0d2137;border:1px solid var(--gold);}
+.msg.user .avatar{background:var(--user-bg);border:1px solid #3949ab;}
+
+.bubble{
+  max-width:78%;
+  padding:10px 14px;
+  border-radius:14px;
+  font-size:.9rem;
+  line-height:1.55;
+}
+.msg.bot .bubble{
+  background:var(--bot-bg);
+  border:1px solid var(--border);
+  border-top-left-radius:4px;
+  color:var(--text);
+}
+.msg.user .bubble{
+  background:var(--user-bg);
+  border:1px solid #3949ab;
+  border-top-right-radius:4px;
+}
+.msg.typing .bubble{color:var(--muted);font-style:italic;}
+
+/* QUICK BTNS */
+.quick-btns{
+  width:100%;max-width:660px;
+  background:#0d1b2e;
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+  padding:10px 16px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  white-space:nowrap;
+}
+.quick-btns button{
+  display:inline-block;
+  margin-right:8px;
+  padding:5px 12px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--muted);
+  font-size:.78rem;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:all .15s;
+}
+.quick-btns button:hover{border-color:var(--gold);color:var(--gold);}
+
+/* INPUT */
+.input-bar{
+  width:100%;max-width:660px;
+  display:flex;gap:0;
+  border:1px solid var(--border);
+  border-top:2px solid var(--gold);
+  border-radius:0 0 16px 16px;
+  overflow:hidden;
+  background:var(--card);
+}
+.input-bar input{
+  flex:1;
+  padding:14px 18px;
+  background:transparent;
+  border:none;outline:none;
+  color:var(--text);
+  font-size:.95rem;
+  font-family:'DM Sans',sans-serif;
+}
+.input-bar input::placeholder{color:var(--muted);}
+.input-bar button{
+  padding:0 22px;
+  background:var(--gold);
+  border:none;
+  color:#000;
+  font-weight:700;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:opacity .15s;
+}
+.input-bar button:hover{opacity:.85}
+.input-bar button:disabled{opacity:.4;cursor:not-allowed}
+
+/* FOOTER */
+footer{margin-top:12px;font-size:.72rem;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GoalBot<span>MUNDIAL 2026</span></div>
+  <div style="font-size:.8rem;color:var(--muted);margin-left:4px;line-height:1.4">
+    Groq · Llama 3<br>
+    <span style="color:var(--green);font-size:.7rem;">⚽ 48 selecciones · 12 grupos</span>
+  </div>
+  <div class="status-dot"></div>
+</header>
+
+<div class="groups-strip" id="groupsStrip"></div>
+
+<div id="chat"></div>
+
+<div class="quick-btns">
+  <button onclick="ask('¿Quién es favorito para ganar el mundial?')">🏆 Favorito</button>
+  <button onclick="ask('¿Cómo está el grupo de Colombia?')">🇨🇴 Colombia</button>
+  <button onclick="ask('¿Qué jugadores de Argentina van al mundial?')">🇦🇷 Argentina</button>
+  <button onclick="ask('¿Cuándo juega Brasil?')">🇧🇷 Brasil</button>
+  <button onclick="ask('¿Qué selecciones están en el grupo A?')">📋 Grupo A</button>
+  <button onclick="ask('¿Dónde se juega la final?')">🏟️ Final</button>
+  <button onclick="ask('¿Quién entrena a Francia?')">🇫🇷 Francia</button>
+  <button onclick="ask('¿Cuándo empieza el mundial?')">📅 Fechas</button>
+</div>
+
+<div class="input-bar">
+  <input type="text" id="inp" placeholder="Pregunta sobre el Mundial 2026..." autocomplete="off"/>
+  <button id="btn" onclick="send()">ENVIAR</button>
+</div>
+
+<footer>Taller Innovate · IA &amp; Chatbots · Colegio Técnico Vicente Azuero</footer>
+
+<script>
+// 🔑 REEMPLAZA CON TU CLAVE DE GROQ: console.groq.com
+const GROQ_KEY = "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";
+
+// ── DATOS DEL MUNDIAL EMBEBIDOS ──────────────────────────────
+const MUNDIAL_DATA = `
+COPA MUNDIAL FIFA 2026 — BASE DE CONOCIMIENTO COMPLETA
+
+FORMATO: 48 selecciones, 12 grupos de 4 equipos. Los 2 primeros de cada grupo + 8 mejores terceros avanzan a Dieciseisavos de Final.
+SEDE: México, Estados Unidos y Canadá.
+INICIO: 11 de junio de 2026. FINAL: 19 de julio de 2026.
+
+GRUPOS:
+Grupo A: México (MEX), Sudáfrica (RSA), República de Corea (KOR), Chequia (CZE)
+Grupo B: Canadá (CAN), Bosnia y Herzegovina (BIH), Catar (QAT), Suiza (SUI)
+Grupo C: Brasil (BRA), Marruecos (MAR), Haití (HAI), Escocia (SCO)
+Grupo D: Estados Unidos (USA), Paraguay (PAR), Australia (AUS), Turquía (TUR)
+Grupo E: Alemania (GER), Curazao (CUW), Costa de Marfil (CIV), Ecuador (ECU)
+Grupo F: Países Bajos (NED), Japón (JPN), Suecia (SWE), Túnez (TUN)
+Grupo G: Bélgica (BEL), Egipto (EGY), Irán (IRN), Nueva Zelanda (NZL)
+Grupo H: España (ESP), Cabo Verde (CPV), Arabia Saudí (KSA), Uruguay (URU)
+Grupo I: Francia (FRA), Senegal (SEN), Irak (IRQ), Noruega (NOR)
+Grupo J: Argentina (ARG), Argelia (ALG), Austria (AUT), Jordania (JOR)
+Grupo K: Portugal (POR), RD Congo (COD), Uzbekistán (UZB), Colombia (COL)
+Grupo L: Inglaterra (ENG), Croacia (CRO), Ghana (GHA), Panamá (PAN)
+
+CONVOCADOS PRINCIPALES:
+ARGENTINA: Porteros: Emiliano Martínez, Gerónimo Rulli, Juan Musso. Defensa: Lisandro Martínez, Cristian Romero, Nicolás Otamendi, Marcos Acuña, Nahuel Molina. Mediocampo: Rodrigo De Paul, Enzo Fernández, Alexis Mac Allister, Giovani Lo Celso. Delanteros: Lionel Messi, Julián Álvarez, Alejandro Garnacho, Lautaro Martínez, Franco Mastantuono, Claudio Echeverri. Entrenador: Lionel Scaloni (no mencionado, DT actual). Nota: la lista oficial aún es preliminar.
+
+BRASIL: Porteros: Alisson, Ederson, Weverton. Defensa: Danilo, Marquinhos, Gabriel Magalhaes, Bremer, Alex Sandro. Mediocampo: Casemiro, Bruno Guimaraes, Fabinho, Paquetá. Delanteros: Vinicius Jr., Neymar Jr., Raphinha, Endrick, Gabriel Martinelli, Matheus Cunha. Entrenador: Carlo Ancelotti.
+
+COLOMBIA: Porteros: David Ospina, Álvaro Montero, Camilo Vargas. Defensa: Daniel Muñoz, Jhon Lucumí, Davinson Sánchez, Johan Mojica, Yerry Mina, Juan Cabal. Mediocampo: James Rodríguez, Richard Ríos, Juan Fernando Quintero, Nelson Deossa, Wilmar Barrios, Yaser Asprilla. Delanteros: Luis Díaz, Jhon Córdoba, Jhon Durán, Rafael Santos Borré, Cucho Hernández. Entrenador: Néstor Lorenzo. Grupo K con Portugal, RD Congo y Uzbekistán.
+
+FRANCIA: Porteros: Mike Maignan, Brice Samba. Defensa: Lucas Hernandez, Theo Hernandez, Ibrahima Konate, Jules Kounde, William Saliba, Dayot Upamecano. Mediocampo: N'Golo Kante, Aurelien Tchouameni, Warren Zaire-Emery, Adrien Rabiot. Delanteros: Kylian Mbappe, Ousmane Dembele, Marcus Thuram, Michael Olise, Bradley Barcola, Rayan Cherki. Entrenador: Didier Deschamps.
+
+ESPAÑA: Grupo H con Cabo Verde, Arabia Saudí y Uruguay. Entrenador: Luis de la Fuente. Delanteros incluyen figuras del Barcelona y Real Madrid.
+
+ALEMANIA: Grupo E con Curazao, Costa de Marfil y Ecuador. Entrenador: Julian Nagelsmann.
+
+PORTUGAL: Grupo K con RD Congo, Uzbekistán y Colombia. Cristiano Ronaldo en la prelista. Entrenador: Roberto Martínez.
+
+MÉXICO: Porteros: Guillermo Ochoa, Raúl Rangel. Defensa: Edson Álvarez, César Montes. Delanteros: Santiago Gimenez (AC Milán), Raúl Jiménez (Fulham), Julián Quiñones. Entrenador: Javier Aguirre. Grupo A en casa.
+
+JAPÓN: Grupo F con Países Bajos, Suecia y Túnez. Takefusa Kubo, Ao Tanaka, Keito Nakamura. Entrenador: Hajime Moriyasu.
+
+REPÚBLICA DE COREA: Grupo A con México, Sudáfrica, Chequia. Heung-min Son (LAFC), Kim Min-jae (Bayern). Entrenador: Hong Myung-bo.
+
+BÉLGICA: Grupo G. Kevin De Bruyne, Romelu Lukaku, Thibaut Courtois, Charles De Ketelaere. Entrenador: Rudi García.
+
+CROACIA: Luka Modric, Mateo Kovacic, Josko Gvardiol. Grupo L. Entrenador: Zlatko Dalic.
+
+CURAZAO: Dato curioso: Dick Advocaat es el entrenador con 78 años, el más veterano en la historia de los mundiales.
+
+CIUDADES SEDE: Vancouver, Seattle, Bahía de San Francisco, Los Ángeles, Guadalajara, Ciudad de México, Monterrey, Houston, Dallas, Kansas City, Atlanta, Miami, Toronto, Boston, Filadelfia, Nueva York/Nueva Jersey.
+FINAL: Nueva York/Nueva Jersey, 19 de julio de 2026.
+`;
+
+const grupos = [
+  {g:'A', eq:['MEX','RSA','KOR','CZE']},
+  {g:'B', eq:['CAN','BIH','QAT','SUI']},
+  {g:'C', eq:['BRA','MAR','HAI','SCO']},
+  {g:'D', eq:['USA','PAR','AUS','TUR']},
+  {g:'E', eq:['GER','CUW','CIV','ECU']},
+  {g:'F', eq:['NED','JPN','SWE','TUN']},
+  {g:'G', eq:['BEL','EGY','IRN','NZL']},
+  {g:'H', eq:['ESP','CPV','KSA','URU']},
+  {g:'I', eq:['FRA','SEN','IRQ','NOR']},
+  {g:'J', eq:['ARG','ALG','AUT','JOR']},
+  {g:'K', eq:['POR','COD','UZB','COL']},
+  {g:'L', eq:['ENG','CRO','GHA','PAN']},
+];
+
+// Render groups strip
+const strip = document.getElementById('groupsStrip');
+grupos.forEach(({g, eq}) => {
+  const s = document.createElement('span');
+  s.textContent = `GRP ${g}: ${eq.join(' · ')}`;
+  s.onclick = () => ask(`¿Quiénes están en el Grupo ${g} y cuáles son sus chances?`);
+  strip.appendChild(s);
+});
+
+const chatEl = document.getElementById('chat');
+const hist = [];
+
+function addMsg(txt, who) {
+  const d = document.createElement('div');
+  d.className = `msg ${who}`;
+  const ico = who === 'bot' ? '⚽' : '🙋';
+  d.innerHTML = `<div class="avatar">${ico}</div><div class="bubble">${txt}</div>`;
+  chatEl.appendChild(d);
+  chatEl.scrollTop = chatEl.scrollHeight;
+  return d;
+}
+
+window.onload = () => {
+  addMsg('¡Hola! Soy <strong>GoalBot</strong> 🏆<br>Tu asistente del <strong>Mundial 2026</strong>. Pregúntame sobre grupos, convocados, fechas, sedes o cualquier cosa del torneo. ¿Qué quieres saber?', 'bot');
+  document.getElementById('inp').addEventListener('keydown', e => { if(e.key==='Enter') send(); });
+};
+
+function ask(q) {
+  document.getElementById('inp').value = q;
+  send();
+}
+
+async function send() {
+  const inp = document.getElementById('inp');
+  const btn = document.getElementById('btn');
+  const q = inp.value.trim();
+  if (!q) return;
+  addMsg(q, 'user');
+  hist.push({role:'user', content: q});
+  inp.value = '';
+  btn.disabled = true;
+
+  const typing = addMsg('⚽ Consultando datos del mundial...', 'bot');
+  typing.classList.add('typing');
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':`Bearer ${GROQ_KEY}`},
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        messages: [
+          {role:'system', content:`Eres GoalBot, el asistente oficial del Mundial 2026. Eres apasionado, conoces todos los datos del torneo y respondes en español con entusiasmo futbolero. Usa emojis de fútbol con moderación. Responde de forma concisa pero completa (máx 4 párrafos). Si te preguntan algo que no está en tu base de datos, da una respuesta inteligente basada en el contexto.
+
+BASE DE DATOS DEL MUNDIAL 2026:
+${MUNDIAL_DATA}`},
+          ...hist
+        ],
+        max_tokens: 400, temperature: 0.75
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const reply = data.choices[0].message.content;
+    hist.push({role:'assistant', content: reply});
+    typing.querySelector('.bubble').innerHTML = reply.replace(/\n/g,'<br>');
+    typing.classList.remove('typing');
+  } catch(e) {
+    typing.querySelector('.bubble').textContent = '⚠️ Error: revisa tu API Key de Groq.';
+    typing.classList.remove('typing');
+  }
+  btn.disabled = false;
+  inp.focus();
+}
+</script>
+</body>
+</html>
